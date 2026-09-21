@@ -145,6 +145,7 @@
       <button data-tab="dashboard" class="tab-btn flex-1 sm:flex-none px-4 py-3 text-sm font-semibold text-center border-b-2 border-fresh-500 text-white whitespace-nowrap transition">📊 Dashboard</button>
       <button data-tab="session" class="tab-btn flex-1 sm:flex-none px-4 py-3 text-sm font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">🌀 Guided Session</button>
       <button data-tab="alerts" class="tab-btn flex-1 sm:flex-none px-4 py-3 text-sm font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">⏰ Alerts</button>
+      <button data-tab="mealplan" class="tab-btn flex-1 sm:flex-none px-4 py-3 text-sm font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">🍽️ Meal Plan</button>
     </div>
   </nav>
 
@@ -368,6 +369,34 @@
       </div>
     </section>
 
+    <!-- ===================== MEAL PLAN TAB ===================== -->
+    <section id="tab-mealplan" class="tab-panel space-y-6">
+
+      <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-xl">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-2">
+          <span>🍽️</span> Affordable Foods (Tanzania)
+        </h2>
+        <p class="text-sm text-slate-300 max-w-2xl">
+          Replacing a trigger food works best when there's something easy to reach for instead. These are common,
+          budget-friendly foods available in most Tanzanian markets — leaning toward higher protein and fiber and
+          away from refined flour and sugar. This is general guidance, not a substitute for advice from a doctor
+          or nutritionist for your specific situation.
+        </p>
+      </div>
+
+      <div id="foodCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-5"></div>
+
+      <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-xl">
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+            <span>🗓️</span> Weekly Meal Timetable
+          </h2>
+          <button id="resetMealPlanBtn" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-surface-700 border border-surface-500 hover:border-aversion-500 text-slate-300">Reset checklist</button>
+        </div>
+        <div id="mealPlanGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="text-center text-[11px] text-slate-600 py-6 px-4 space-y-1">
@@ -405,7 +434,8 @@
     sessionLog: [],
     reminders: [],
     ttsEnabled: false,
-    lastFired: {}
+    lastFired: {},
+    mealPlanChecks: {}
   });
 
   let state = loadState();
@@ -1088,12 +1118,140 @@
   flashAlertBtn.addEventListener('click', triggerFlashAlert);
   flashCloseBtn.addEventListener('click', () => stopFlashAlert(false));
 
+  /* ============================= MEAL PLAN (Tanzania) ============================= */
+  const FOOD_CATEGORIES = [
+    {
+      name: 'Proteins',
+      icon: '🐟',
+      items: [
+        { name: 'Dagaa', note: 'small dried lake fish', tags: ['💪 Protein', '💰 Low-Cost'] },
+        { name: 'Maharage', note: 'beans', tags: ['💪 Protein', '🌾 Fiber', '💰 Low-Cost'] },
+        { name: 'Kunde', note: 'cowpeas', tags: ['💪 Protein', '🌾 Fiber', '💰 Low-Cost'] },
+        { name: 'Mayai', note: 'eggs', tags: ['💪 Protein', '💰 Low-Cost'] },
+        { name: 'Samaki wa ziwa', note: 'fresh lake/river fish (e.g. tilapia)', tags: ['💪 Protein'] },
+        { name: 'Kuku wa kienyeji', note: 'free-range chicken', tags: ['💪 Protein'] },
+        { name: 'Karanga', note: 'groundnuts', tags: ['💪 Protein', '💰 Low-Cost'] }
+      ]
+    },
+    {
+      name: 'Vegetables & Greens',
+      icon: '🥬',
+      items: [
+        { name: 'Sukuma wiki', note: 'collard greens', tags: ['🌾 Fiber', '💰 Low-Cost'] },
+        { name: 'Mchicha', note: 'amaranth greens', tags: ['🌾 Fiber', '💰 Low-Cost'] },
+        { name: 'Nyanya', note: 'tomatoes', tags: ['💰 Low-Cost'] },
+        { name: 'Vitunguu', note: 'onions', tags: ['💰 Low-Cost'] },
+        { name: 'Bamia', note: 'okra', tags: ['🌾 Fiber'] },
+        { name: 'Pilipili hoho', note: 'bell pepper', tags: ['💰 Low-Cost'] }
+      ]
+    },
+    {
+      name: 'Whole Grains & Starches',
+      icon: '🌽',
+      items: [
+        { name: 'Ugali wa dona', note: 'whole maize meal (less refined than sembe safi)', tags: ['🌾 Fiber', '💰 Low-Cost'] },
+        { name: 'Viazi vitamu', note: 'sweet potatoes', tags: ['🌾 Fiber', '💰 Low-Cost'] },
+        { name: 'Mihogo', note: 'cassava', tags: ['🌾 Fiber', '💰 Low-Cost'] },
+        { name: 'Mchele wa kahawia', note: 'brown rice', tags: ['🌾 Fiber'] },
+        { name: 'Mtama / Uwele', note: 'sorghum / millet', tags: ['🌾 Fiber', '💰 Low-Cost'] },
+        { name: 'Ndizi mbichi', note: 'green cooking bananas (matoke)', tags: ['🌾 Fiber', '💰 Low-Cost'] }
+      ]
+    },
+    {
+      name: 'Fruits',
+      icon: '🥭',
+      items: [
+        { name: 'Papai', note: 'papaya', tags: ['🌾 Fiber', '💰 Low-Cost'] },
+        { name: 'Embe', note: 'mango (in season)', tags: ['💰 Low-Cost'] },
+        { name: 'Machungwa', note: 'oranges', tags: ['💰 Low-Cost'] },
+        { name: 'Parachichi', note: 'avocado', tags: ['🥦 Nutrient-dense'] },
+        { name: 'Ndizi mbivu', note: 'ripe banana', tags: ['💰 Low-Cost'] },
+        { name: 'Tikiti maji', note: 'watermelon (in season)', tags: ['💰 Low-Cost'] }
+      ]
+    }
+  ];
+
+  function renderFoodCategories() {
+    const grid = document.getElementById('foodCategoryGrid');
+    grid.innerHTML = FOOD_CATEGORIES.map(cat => `
+      <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-xl">
+        <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+          <span>${cat.icon}</span> ${cat.name}
+        </h3>
+        <ul class="space-y-2.5">
+          ${cat.items.map(item => `
+            <li class="flex items-start justify-between gap-3 text-sm">
+              <div>
+                <span class="text-slate-100 font-medium">${item.name}</span>
+                <span class="text-slate-500"> — ${item.note}</span>
+              </div>
+              <div class="flex gap-1 shrink-0 flex-wrap justify-end">
+                ${item.tags.map(t => `<span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-700 border border-surface-500 text-fresh-300 whitespace-nowrap">${t}</span>`).join('')}
+              </div>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    `).join('');
+  }
+
+  const MEAL_PLAN = [
+    { day: 'Monday', breakfast: 'Mayai + Viazi vitamu', lunch: 'Ugali wa dona + Sukuma wiki + Dagaa', dinner: 'Maharage + Mchicha + Ndizi mbivu' },
+    { day: 'Tuesday', breakfast: 'Uji wa mtama + Papai', lunch: 'Mchele wa kahawia + Kuku wa kienyeji + Nyanya/Vitunguu', dinner: 'Mihogo + Mchicha + Samaki wa ziwa' },
+    { day: 'Wednesday', breakfast: 'Karanga + Ndizi mbivu', lunch: 'Ugali wa dona + Maharage + Sukuma wiki', dinner: 'Viazi vitamu + Kunde + Bamia' },
+    { day: 'Thursday', breakfast: 'Uji wa uwele + Embe', lunch: 'Mchele wa kahawia + Samaki wa ziwa + Mboga mchanganyiko', dinner: 'Ugali wa dona + Kuku wa kienyeji + Sukuma wiki' },
+    { day: 'Friday', breakfast: 'Parachichi + Mayai', lunch: 'Maharage + Viazi vitamu + Mchicha', dinner: 'Mtama/Ugali + Dagaa + Nyanya' },
+    { day: 'Saturday', breakfast: 'Ndizi mbivu + Karanga', lunch: 'Mchele wa kahawia + Kunde + Mboga mchanganyiko', dinner: 'Mihogo + Samaki wa ziwa + Sukuma wiki' },
+    { day: 'Sunday', breakfast: 'Uji wa mtama + Papai', lunch: 'Ugali wa dona + Kuku wa kienyeji + Mboga mchanganyiko', dinner: 'Maharage + Viazi vitamu + Mchicha' }
+  ];
+
+  function renderMealPlan() {
+    const grid = document.getElementById('mealPlanGrid');
+    grid.innerHTML = MEAL_PLAN.map(d => `
+      <div class="bg-surface-700/60 border border-surface-500 rounded-xl p-4">
+        <p class="text-sm font-bold text-white mb-3">${d.day}</p>
+        ${['breakfast', 'lunch', 'dinner'].map(meal => {
+          const key = `${d.day}-${meal}`;
+          const checked = !!state.mealPlanChecks[key];
+          const label = meal.charAt(0).toUpperCase() + meal.slice(1);
+          return `
+            <label class="flex items-start gap-2.5 mb-2.5 last:mb-0 cursor-pointer">
+              <input type="checkbox" data-key="${key}" class="mealplan-check switch mt-0.5" ${checked ? 'checked' : ''} />
+              <span class="text-xs">
+                <span class="block text-slate-400 font-semibold uppercase tracking-wide">${label}</span>
+                <span class="${checked ? 'text-slate-500 line-through' : 'text-slate-200'}">${d[meal]}</span>
+              </span>
+            </label>
+          `;
+        }).join('')}
+      </div>
+    `).join('');
+
+    grid.querySelectorAll('.mealplan-check').forEach(cb => {
+      cb.addEventListener('change', () => {
+        if (cb.checked) state.mealPlanChecks[cb.dataset.key] = true;
+        else delete state.mealPlanChecks[cb.dataset.key];
+        saveState();
+        renderMealPlan();
+      });
+    });
+  }
+
+  document.getElementById('resetMealPlanBtn').addEventListener('click', () => {
+    state.mealPlanChecks = {};
+    saveState();
+    renderMealPlan();
+    showToast('Meal plan checklist reset.', 'warn');
+  });
+
   /* ============================= INIT ============================= */
   function init() {
     renderFoodPreview();
     renderDashboard();
     renderNotifStatus();
     renderReminders();
+    renderFoodCategories();
+    renderMealPlan();
     ttsToggle.checked = !!state.ttsEnabled;
     setPhaseVisual(0);
     sessionStage.classList.add('phase-bg-idle');
