@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<title>ReWire — Self-Aversion Hypnosis &amp; Habit Conditioning</title>
+<meta name="description" content="Guided self-aversion conditioning to help you build a strong, unconscious disgust response to trigger foods." />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  if (window.tailwind) {
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+        colors: {
+          fresh: {
+            DEFAULT: '#10b981',
+            50: '#ecfdf5', 100: '#d1fae5', 300: '#6ee7b7',
+            500: '#10b981', 600: '#059669', 700: '#047857', 900: '#064e3b'
+          },
+          aversion: {
+            DEFAULT: '#be123c',
+            300: '#fda4af', 500: '#be123c', 600: '#9f1239', 700: '#881337', 900: '#4c0519'
+          },
+          purpleDeep: { 500: '#7e22ce', 600: '#6b21a8', 700: '#581c87', 900: '#3b0764' },
+          surface: { 900: '#0a0c10', 800: '#12151b', 700: '#1a1f27', 600: '#232936', 500: '#2c3341' }
+        },
+        boxShadow: {
+          glowFresh: '0 0 25px -5px rgba(16,185,129,0.55)',
+          glowAversion: '0 0 30px -5px rgba(190,18,60,0.6)'
+        },
+        keyframes: {
+          breathe: {
+            '0%, 100%': { transform: 'scale(0.7)', opacity: '0.55' },
+            '50%': { transform: 'scale(1.15)', opacity: '1' }
+          },
+          pulseFast: {
+            '0%, 100%': { opacity: '1' },
+            '50%': { opacity: '0.35' }
+          },
+          ripple: {
+            '0%': { transform: 'scale(0.6)', opacity: '0.8' },
+            '100%': { transform: 'scale(2.4)', opacity: '0' }
+          },
+          fadeUp: {
+            '0%': { opacity: '0', transform: 'translateY(8px)' },
+            '100%': { opacity: '1', transform: 'translateY(0)' }
+          },
+          flashBg: {
+            '0%, 100%': { backgroundColor: '#4c0519' },
+            '50%': { backgroundColor: '#3b0764' }
+          },
+          shimmer: {
+            '0%': { backgroundPosition: '-200% 0' },
+            '100%': { backgroundPosition: '200% 0' }
+          }
+        },
+        animation: {
+          breathe: 'breathe 8s ease-in-out infinite',
+          pulseFast: 'pulseFast 0.9s ease-in-out infinite',
+          ripple: 'ripple 2.2s ease-out infinite',
+          fadeUp: 'fadeUp 0.5s ease-out',
+          flashBg: 'flashBg 0.6s ease-in-out infinite',
+          shimmer: 'shimmer 2.5s linear infinite'
+        }
+      }
+    }
+  };
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  html, body { background-color: #0a0c10; }
+  body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: #12151b; }
+  ::-webkit-scrollbar-thumb { background: #2c3341; border-radius: 9999px; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .food-img-fresh { filter: saturate(1) contrast(1) brightness(1) grayscale(0); transition: filter 1.2s ease; }
+  .food-img-sensory { filter: saturate(1.7) contrast(1.25) brightness(1.15) drop-shadow(0 0 18px rgba(16,185,129,0.35)); transition: filter 1.2s ease; }
+  .food-img-repulsion { filter: grayscale(0.35) sepia(0.55) hue-rotate(280deg) saturate(2) contrast(1.3) brightness(0.55); transition: filter 1.4s ease; }
+
+  .phase-bg-1 { background: radial-gradient(circle at 50% 35%, #064e3b 0%, #0a0c10 70%); }
+  .phase-bg-2 { background: radial-gradient(circle at 50% 35%, #065f46 0%, #0a0c10 65%); }
+  .phase-bg-3 { background: radial-gradient(circle at 50% 35%, #4c0519 0%, #1a0510 45%, #0a0c10 85%); }
+  .phase-bg-4 { background: radial-gradient(circle at 50% 35%, #075985 0%, #0a0c10 70%); }
+  .phase-bg-idle { background: radial-gradient(circle at 50% 35%, #1a1f27 0%, #0a0c10 70%); }
+  #sessionStage { transition: background 1.6s ease; }
+
+  .ripple-ring { position: absolute; inset: 0; margin: auto; width: 90px; height: 90px; border-radius: 9999px; border: 2px solid rgba(56,189,248,0.6); }
+
+  .shimmer-text {
+    background: linear-gradient(90deg, #94a3b8 0%, #e2e8f0 50%, #94a3b8 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.8; }
+  input[type="checkbox"].switch { appearance: none; width: 42px; height: 24px; background: #2c3341; border-radius: 9999px; position: relative; cursor: pointer; transition: background 0.2s ease; flex-shrink: 0; }
+  input[type="checkbox"].switch:checked { background: #10b981; }
+  input[type="checkbox"].switch::before { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; background: white; border-radius: 9999px; transition: transform 0.2s ease; }
+  input[type="checkbox"].switch:checked::before { transform: translateX(18px); }
+
+  .toast { animation: fadeUp 0.35s ease-out; }
+</style>
+</head>
+<body class="bg-surface-900 text-slate-200 min-h-screen antialiased">
+
+<div id="app" class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 border-b border-surface-600/60 bg-surface-900/90 backdrop-blur">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-fresh-500 to-aversion-600 flex items-center justify-center shadow-glowFresh">
+          <span class="text-lg">🧠</span>
+        </div>
+        <div>
+          <p class="font-extrabold tracking-tight text-white leading-none">ReWire</p>
+          <p class="text-[11px] text-slate-400 leading-none mt-0.5">Self-Aversion Conditioning</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="streakBadge" class="hidden sm:flex items-center gap-1.5 text-xs font-semibold bg-surface-700 border border-surface-500 px-3 py-1.5 rounded-full text-fresh-300">
+          <span>🔥</span><span id="streakBadgeText">0-day streak</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Tab nav -->
+  <nav class="sticky top-[57px] z-20 bg-surface-900/95 backdrop-blur border-b border-surface-600/60">
+    <div class="max-w-5xl mx-auto px-2 sm:px-6 flex gap-1 overflow-x-auto no-scrollbar">
+      <button data-tab="dashboard" class="tab-btn flex-1 sm:flex-none px-4 py-3 text-sm font-semibold text-center border-b-2 border-fresh-500 text-white whitespace-nowrap transition">📊 Dashboard</button>
+      <button data-tab="session" class="tab-btn flex-1 sm:flex-none px-4 py-3 text-sm font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">🌀 Guided Session</button>
+      <button data-tab="alerts" class="tab-btn flex-1 sm:flex-none px-4 py-3 text-sm font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">⏰ Alerts</button>
+    </div>
+  </nav>
+
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- ===================== DASHBOARD TAB ===================== -->
+    <section id="tab-dashboard" class="tab-panel active space-y-6">
+
+      <!-- Target Food Setup -->
+      <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-xl">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+          <span>🎯</span> Target Food Setup
+        </h2>
+        <div class="flex flex-col sm:flex-row gap-5">
+          <div class="flex flex-col items-center gap-2 shrink-0">
+            <div class="relative w-28 h-28 rounded-2xl overflow-hidden border-2 border-dashed border-surface-500 bg-surface-700 flex items-center justify-center">
+              <img id="foodImgPreview" src="" alt="Target food" class="w-full h-full object-cover hidden" />
+              <span id="foodImgPlaceholder" class="text-4xl">🥐</span>
+            </div>
+            <label class="text-xs font-medium text-fresh-400 hover:text-fresh-300 cursor-pointer underline underline-offset-2">
+              Upload image
+              <input id="foodImgInput" type="file" accept="image/*" class="hidden" />
+            </label>
+            <button id="removeFoodImgBtn" class="text-[11px] text-slate-500 hover:text-aversion-300 hidden">Remove image</button>
+          </div>
+          <div class="flex-1 space-y-3">
+            <div>
+              <label class="text-xs font-medium text-slate-400 mb-1 block">Target food / ingredient</label>
+              <input id="foodNameInput" type="text" placeholder="e.g. White Flour / Pastries" maxlength="60"
+                class="w-full bg-surface-700 border border-surface-500 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-fresh-500/60" />
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="preset-food-btn text-xs px-3 py-1.5 rounded-full bg-surface-700 border border-surface-500 hover:border-fresh-500 text-slate-300" data-food="White Flour / Pastries" data-emoji="🥐">🥐 White Flour</button>
+              <button type="button" class="preset-food-btn text-xs px-3 py-1.5 rounded-full bg-surface-700 border border-surface-500 hover:border-fresh-500 text-slate-300" data-food="Refined Sugar / Sweets" data-emoji="🍩">🍩 Sugar</button>
+              <button type="button" class="preset-food-btn text-xs px-3 py-1.5 rounded-full bg-surface-700 border border-surface-500 hover:border-fresh-500 text-slate-300" data-food="Deep-Fried Foods" data-emoji="🍟">🍟 Fried Food</button>
+              <button type="button" class="preset-food-btn text-xs px-3 py-1.5 rounded-full bg-surface-700 border border-surface-500 hover:border-fresh-500 text-slate-300" data-food="Soda / Sugary Drinks" data-emoji="🥤">🥤 Soda</button>
+            </div>
+            <button id="saveFoodBtn" class="w-full sm:w-auto bg-fresh-600 hover:bg-fresh-500 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition shadow-glowFresh">
+              Save Target Food
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Streak + Quick log -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-xl flex flex-col items-center justify-center text-center">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">21-Day Rewiring Phase</h2>
+          <div class="relative w-36 h-36 flex items-center justify-center">
+            <svg class="w-36 h-36 -rotate-90" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" stroke="#232936" stroke-width="10" fill="none" />
+              <circle id="streakRing" cx="60" cy="60" r="52" stroke="#10b981" stroke-width="10" fill="none"
+                stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" style="transition: stroke-dashoffset 0.6s ease;" />
+            </svg>
+            <div class="absolute flex flex-col items-center">
+              <span id="streakCountText" class="text-4xl font-extrabold text-white">0</span>
+              <span class="text-[11px] text-slate-400">of 21 days</span>
+            </div>
+          </div>
+          <p id="streakStatusText" class="text-xs text-slate-400 mt-3">Start your first conditioning session today.</p>
+        </div>
+
+        <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-xl flex flex-col">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">Daily Session Log</h2>
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="bg-surface-700 rounded-xl p-3 text-center">
+              <p id="totalSessionsText" class="text-2xl font-extrabold text-fresh-400">0</p>
+              <p class="text-[11px] text-slate-400">total sessions</p>
+            </div>
+            <div class="bg-surface-700 rounded-xl p-3 text-center">
+              <p id="lastSessionText" class="text-2xl font-extrabold text-purpleDeep-500">—</p>
+              <p class="text-[11px] text-slate-400">last completed</p>
+            </div>
+          </div>
+          <button id="quickCompleteBtn"
+            class="mt-auto w-full bg-gradient-to-r from-fresh-600 to-fresh-500 hover:from-fresh-500 hover:to-fresh-400 text-white font-bold py-3 rounded-xl transition shadow-glowFresh flex items-center justify-center gap-2">
+            <span>✅</span> Complete Today's Session
+          </button>
+          <p class="text-[11px] text-slate-500 mt-2 text-center">Marks today done without the full guided module. Use the <span class="text-slate-300">Guided Session</span> tab for the full 5-minute conditioning.</p>
+        </div>
+      </div>
+
+      <!-- Recent log -->
+      <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-xl">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">Recent Activity</h2>
+        <ul id="recentLogList" class="space-y-2">
+          <li class="text-sm text-slate-500 italic">No sessions logged yet.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===================== SESSION TAB ===================== -->
+    <section id="tab-session" class="tab-panel space-y-5">
+
+      <div id="sessionStage" class="phase-bg-idle relative rounded-2xl border border-surface-600 overflow-hidden shadow-2xl min-h-[420px] flex flex-col">
+
+        <!-- top bar -->
+        <div class="relative z-10 flex items-center justify-between px-5 pt-5">
+          <span id="phaseLabel" class="text-xs font-bold uppercase tracking-widest text-fresh-300 bg-surface-900/60 px-3 py-1 rounded-full border border-surface-600">Ready</span>
+          <div class="flex items-center gap-2 bg-surface-900/60 px-3 py-1.5 rounded-full border border-surface-600">
+            <span class="text-xs text-slate-300">🔊 Voice</span>
+            <input id="ttsToggle" type="checkbox" class="switch" />
+          </div>
+        </div>
+
+        <!-- visual center -->
+        <div class="relative flex-1 flex flex-col items-center justify-center px-6 py-6 text-center z-10">
+
+          <!-- breathing circle (phase 1) -->
+          <div id="breatheVisual" class="hidden relative w-40 h-40 mb-5 items-center justify-center">
+            <div class="absolute inset-0 rounded-full bg-fresh-500/25 animate-breathe"></div>
+            <div class="absolute inset-4 rounded-full bg-fresh-500/40 animate-breathe" style="animation-delay: 0.4s;"></div>
+            <div class="relative w-16 h-16 rounded-full bg-fresh-400 flex items-center justify-center text-xs font-bold text-surface-900">
+              <span id="breatheText">IN</span>
+            </div>
+          </div>
+
+          <!-- food image visual (phase 2 / 3) -->
+          <div id="foodVisual" class="hidden relative w-40 h-40 mb-5 rounded-2xl overflow-hidden border border-surface-500 items-center justify-center bg-surface-700">
+            <img id="sessionFoodImg" src="" class="w-full h-full object-cover food-img-fresh hidden" />
+            <span id="sessionFoodEmoji" class="text-6xl">🥐</span>
+            <div id="repulsionOverlay" class="hidden absolute inset-0 bg-gradient-to-t from-aversion-900/80 via-purpleDeep-900/30 to-transparent"></div>
+          </div>
+
+          <!-- water / clean visual (phase 4b) -->
+          <div id="waterVisual" class="hidden relative w-40 h-40 mb-5 items-center justify-center">
+            <div class="ripple-ring animate-ripple"></div>
+            <div class="ripple-ring animate-ripple" style="animation-delay: 0.7s;"></div>
+            <div class="ripple-ring animate-ripple" style="animation-delay: 1.4s;"></div>
+            <div class="relative w-16 h-16 rounded-full bg-sky-400/90 flex items-center justify-center text-2xl">💧</div>
+          </div>
+
+          <p id="promptText" class="max-w-md text-lg sm:text-xl font-medium text-slate-100 leading-relaxed min-h-[84px] animate-fadeUp">
+            Press <span class="text-fresh-400 font-bold">Start Session</span> when you're ready for your 5-minute conditioning session.
+          </p>
+        </div>
+
+        <!-- progress -->
+        <div class="relative z-10 px-5 pb-5">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-1.5">
+            <span id="elapsedText">0:00</span>
+            <span id="phaseHint">Phase 1 · Induction</span>
+            <span>5:00</span>
+          </div>
+          <div class="w-full h-2 bg-surface-900/70 rounded-full overflow-hidden border border-surface-600">
+            <div id="progressBar" class="h-full bg-gradient-to-r from-fresh-500 via-purpleDeep-500 to-aversion-500 transition-[width] duration-1000 ease-linear" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- controls -->
+      <div class="flex flex-wrap gap-3 justify-center">
+        <button id="startSessionBtn" class="px-6 py-3 rounded-xl bg-fresh-600 hover:bg-fresh-500 text-white font-bold shadow-glowFresh transition">▶ Start Session</button>
+        <button id="pauseSessionBtn" class="hidden px-6 py-3 rounded-xl bg-surface-700 hover:bg-surface-600 border border-surface-500 text-white font-bold transition">⏸ Pause</button>
+        <button id="resumeSessionBtn" class="hidden px-6 py-3 rounded-xl bg-fresh-600 hover:bg-fresh-500 text-white font-bold transition">▶ Resume</button>
+        <button id="resetSessionBtn" class="hidden px-6 py-3 rounded-xl bg-aversion-700 hover:bg-aversion-600 text-white font-bold transition">■ End &amp; Reset</button>
+      </div>
+
+      <!-- phase overview -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="bg-surface-800 border border-surface-600 rounded-xl p-3">
+          <p class="text-[11px] font-bold text-fresh-400 uppercase tracking-wide">0:00–1:00</p>
+          <p class="text-xs text-slate-400 mt-1">Deep Induction &amp; Relaxation</p>
+        </div>
+        <div class="bg-surface-800 border border-surface-600 rounded-xl p-3">
+          <p class="text-[11px] font-bold text-fresh-300 uppercase tracking-wide">1:00–2:30</p>
+          <p class="text-xs text-slate-400 mt-1">Vivid Visualization &amp; Sensory Amplification</p>
+        </div>
+        <div class="bg-surface-800 border border-surface-600 rounded-xl p-3">
+          <p class="text-[11px] font-bold text-aversion-400 uppercase tracking-wide">2:30–4:00</p>
+          <p class="text-xs text-slate-400 mt-1">Repulsion Superimposition</p>
+        </div>
+        <div class="bg-surface-800 border border-surface-600 rounded-xl p-3">
+          <p class="text-[11px] font-bold text-sky-400 uppercase tracking-wide">4:00–5:00</p>
+          <p class="text-xs text-slate-400 mt-1">Anchor Installation &amp; Clean Refresh</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ALERTS TAB ===================== -->
+    <section id="tab-alerts" class="tab-panel space-y-6">
+
+      <!-- Permission -->
+      <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-xl">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+          <span>🔔</span> Browser Push Notifications
+        </h2>
+        <div class="flex items-center justify-between gap-4 flex-wrap">
+          <p class="text-sm text-slate-300 max-w-md">Allow notifications so your conditioning reminders and pre-meal alerts can reach you even when this tab is in the background.</p>
+          <div class="flex items-center gap-3">
+            <span id="notifStatusBadge" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-surface-700 border border-surface-500 text-slate-300">Checking…</span>
+            <button id="requestNotifBtn" class="px-4 py-2.5 rounded-lg bg-fresh-600 hover:bg-fresh-500 text-white text-sm font-semibold transition">Enable Alerts</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reminder schedule -->
+      <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-xl">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+          <span>⏰</span> Custom Alarm Schedule <span class="text-slate-500 normal-case font-normal">(up to 3 daily)</span>
+        </h2>
+        <ul id="reminderList" class="space-y-2 mb-4">
+          <li class="text-sm text-slate-500 italic">No reminders set yet.</li>
+        </ul>
+        <div id="reminderAddRow" class="flex flex-wrap items-center gap-3">
+          <input id="reminderTimeInput" type="time" value="08:00" class="bg-surface-700 border border-surface-500 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-fresh-500/60" />
+          <button id="addReminderBtn" class="px-4 py-2 rounded-lg bg-surface-700 border border-surface-500 hover:border-fresh-500 text-sm font-semibold text-slate-200 transition">+ Add Reminder</button>
+        </div>
+        <p id="reminderLimitText" class="text-[11px] text-slate-500 mt-2 hidden">You've reached the 3-reminder limit. Remove one to add another.</p>
+      </div>
+
+      <!-- Pre-meal flash alert -->
+      <div class="bg-gradient-to-br from-aversion-900/40 to-purpleDeep-900/40 border border-aversion-700/50 rounded-2xl p-5 shadow-xl">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-aversion-300 mb-2 flex items-center gap-2">
+          <span>⚡</span> Pre-Meal Flash Alert
+        </h2>
+        <p class="text-sm text-slate-300 mb-4 max-w-md">Tap this ~5 minutes before you eat to trigger a rapid 30-second aversion reminder tied to your target food.</p>
+        <button id="flashAlertBtn" class="px-5 py-3 rounded-xl bg-aversion-600 hover:bg-aversion-500 text-white font-bold shadow-glowAversion transition">
+          ⚡ Trigger Pre-Meal Flash (30s)
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="text-center text-[11px] text-slate-600 py-6 px-4">
+    Your data (target food, streak, schedule) is stored only in this browser's local storage. This tool is a self-guided habit-conditioning aid, not a medical or psychological treatment.
+  </footer>
+</div>
+
+<!-- Flash overlay -->
+<div id="flashOverlay" class="hidden fixed inset-0 z-50 flex flex-col items-center justify-center text-center px-6" style="background:#4c0519;">
+  <button id="flashCloseBtn" class="absolute top-5 right-5 text-white/70 hover:text-white text-2xl leading-none">&times;</button>
+  <p class="text-xs font-bold uppercase tracking-widest text-white/70 mb-4">Pre-Meal Aversion Flash</p>
+  <p id="flashMessage" class="text-2xl sm:text-3xl font-extrabold text-white max-w-lg leading-snug animate-pulseFast"></p>
+  <div class="mt-8 w-48 h-2 bg-black/30 rounded-full overflow-hidden">
+    <div id="flashProgress" class="h-full bg-white transition-[width] duration-1000 ease-linear" style="width:100%"></div>
+  </div>
+  <p id="flashCountdown" class="mt-3 text-sm text-white/80 font-semibold">30s</p>
+</div>
+
+<!-- Toast container -->
+<div id="toastContainer" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================= STATE ============================= */
+  const STORAGE_KEY = 'selfAversionApp_v1';
+
+  const defaultState = () => ({
+    targetFood: { name: '', imageData: null, emoji: '🥐' },
+    streak: 0,
+    totalSessions: 0,
+    lastCompletedDate: null,
+    sessionLog: [],
+    reminders: [],
+    ttsEnabled: false,
+    lastFired: {}
+  });
+
+  let state = loadState();
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      return Object.assign(defaultState(), parsed);
+    } catch (e) {
+      return defaultState();
+    }
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      showToast('Storage limit reached — try a smaller image.', 'error');
+    }
+  }
+
+  /* ============================= HELPERS ============================= */
+  function pad(n) { return n.toString().padStart(2, '0'); }
+  function todayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+  function currentHHMM() {
+    const d = new Date();
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function daysBetween(dateStrA, dateStrB) {
+    const a = new Date(dateStrA + 'T00:00:00');
+    const b = new Date(dateStrB + 'T00:00:00');
+    return Math.round((b - a) / 86400000);
+  }
+  function foodLabel() {
+    return (state.targetFood.name || 'this food').trim();
+  }
+  function prettyDate(dateStr) {
+    if (!dateStr) return '—';
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  }
+  function uid() {
+    return 'r_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  function showToast(message, kind) {
+    const container = document.getElementById('toastContainer');
+    const el = document.createElement('div');
+    const colors = kind === 'error'
+      ? 'bg-aversion-700 border-aversion-500'
+      : kind === 'warn'
+        ? 'bg-purpleDeep-700 border-purpleDeep-500'
+        : 'bg-fresh-700 border-fresh-500';
+    el.className = `toast pointer-events-auto text-sm text-white font-medium px-4 py-2.5 rounded-lg border shadow-xl ${colors}`;
+    el.textContent = message;
+    container.appendChild(el);
+    setTimeout(() => {
+      el.style.transition = 'opacity 0.4s ease';
+      el.style.opacity = '0';
+      setTimeout(() => el.remove(), 400);
+    }, 2600);
+  }
+
+  /* ============================= TABS ============================= */
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+  function switchTab(name) {
+    tabButtons.forEach(b => {
+      const active = b.dataset.tab === name;
+      b.classList.toggle('border-fresh-500', active);
+      b.classList.toggle('text-white', active);
+      b.classList.toggle('border-transparent', !active);
+      b.classList.toggle('text-slate-400', !active);
+    });
+    tabPanels.forEach(p => p.classList.toggle('active', p.id === `tab-${name}`));
+  }
+
+  /* ============================= TARGET FOOD SETUP ============================= */
+  const foodNameInput = document.getElementById('foodNameInput');
+  const foodImgInput = document.getElementById('foodImgInput');
+  const foodImgPreview = document.getElementById('foodImgPreview');
+  const foodImgPlaceholder = document.getElementById('foodImgPlaceholder');
+  const removeFoodImgBtn = document.getElementById('removeFoodImgBtn');
+  const saveFoodBtn = document.getElementById('saveFoodBtn');
+
+  let pendingEmoji = null;
+
+  document.querySelectorAll('.preset-food-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      foodNameInput.value = btn.dataset.food;
+      pendingEmoji = btn.dataset.emoji;
+      if (!state.targetFood.imageData) {
+        foodImgPlaceholder.textContent = btn.dataset.emoji;
+      }
+    });
+  });
+
+  foodImgInput.addEventListener('change', () => {
+    const file = foodImgInput.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showToast('Please choose an image file.', 'error');
+      return;
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      showToast('Image too large — please use one under 4MB.', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      state.targetFood.imageData = reader.result;
+      renderFoodPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  removeFoodImgBtn.addEventListener('click', () => {
+    state.targetFood.imageData = null;
+    renderFoodPreview();
+  });
+
+  saveFoodBtn.addEventListener('click', () => {
+    const name = foodNameInput.value.trim();
+    if (!name) {
+      showToast('Enter a target food name first.', 'error');
+      return;
+    }
+    state.targetFood.name = name;
+    if (pendingEmoji) state.targetFood.emoji = pendingEmoji;
+    saveState();
+    renderFoodPreview();
+    renderDashboard();
+    showToast('Target food saved.', 'ok');
+  });
+
+  function renderFoodPreview() {
+    if (state.targetFood.imageData) {
+      foodImgPreview.src = state.targetFood.imageData;
+      foodImgPreview.classList.remove('hidden');
+      foodImgPlaceholder.classList.add('hidden');
+      removeFoodImgBtn.classList.remove('hidden');
+    } else {
+      foodImgPreview.classList.add('hidden');
+      foodImgPlaceholder.classList.remove('hidden');
+      foodImgPlaceholder.textContent = state.targetFood.emoji || '🥐';
+      removeFoodImgBtn.classList.add('hidden');
+    }
+    foodNameInput.value = state.targetFood.name || '';
+
+    // mirror into session visual
+    if (state.targetFood.imageData) {
+      sessionFoodImg.src = state.targetFood.imageData;
+      sessionFoodImg.classList.remove('hidden');
+      sessionFoodEmoji.classList.add('hidden');
+    } else {
+      sessionFoodImg.classList.add('hidden');
+      sessionFoodEmoji.classList.remove('hidden');
+      sessionFoodEmoji.textContent = state.targetFood.emoji || '🥐';
+    }
+  }
+
+  /* ============================= DASHBOARD ============================= */
+  const streakRing = document.getElementById('streakRing');
+  const streakCountText = document.getElementById('streakCountText');
+  const streakStatusText = document.getElementById('streakStatusText');
+  const streakBadgeText = document.getElementById('streakBadgeText');
+  const totalSessionsText = document.getElementById('totalSessionsText');
+  const lastSessionText = document.getElementById('lastSessionText');
+  const recentLogList = document.getElementById('recentLogList');
+  const RING_CIRC = 326.7;
+
+  function renderDashboard() {
+    const displayStreak = Math.min(state.streak, 21);
+    const ratio = displayStreak / 21;
+    streakRing.setAttribute('stroke-dashoffset', String(RING_CIRC * (1 - ratio)));
+    streakRing.setAttribute('stroke', state.streak >= 21 ? '#7e22ce' : '#10b981');
+    streakCountText.textContent = state.streak;
+    streakBadgeText.textContent = `${state.streak}-day streak`;
+
+    if (state.streak === 0) {
+      streakStatusText.textContent = 'Start your first conditioning session today.';
+    } else if (state.streak >= 21) {
+      streakStatusText.textContent = 'Rewiring phase complete! Keep reinforcing the habit.';
+    } else {
+      const today = todayStr();
+      const doneToday = state.lastCompletedDate === today;
+      streakStatusText.textContent = doneToday
+        ? `Day ${state.streak} complete. Great work — see you tomorrow.`
+        : `Day ${state.streak + 1} awaits. Complete today's session to continue.`;
+    }
+
+    totalSessionsText.textContent = state.totalSessions;
+    lastSessionText.textContent = prettyDate(state.lastCompletedDate);
+
+    if (state.sessionLog.length === 0) {
+      recentLogList.innerHTML = `<li class="text-sm text-slate-500 italic">No sessions logged yet.</li>`;
+    } else {
+      const items = state.sessionLog.slice(-6).reverse().map(entry => {
+        const icon = entry.type === 'guided' ? '🌀' : '✅';
+        const typeLabel = entry.type === 'guided' ? 'Guided 5-min session' : 'Quick check-in';
+        return `<li class="flex items-center justify-between text-sm bg-surface-700/60 rounded-lg px-3 py-2">
+          <span class="flex items-center gap-2"><span>${icon}</span><span class="text-slate-200">${typeLabel}</span></span>
+          <span class="text-slate-400 text-xs">${entry.date} · ${entry.time}</span>
+        </li>`;
+      }).join('');
+      recentLogList.innerHTML = items;
+    }
+  }
+
+  function completeSession(type) {
+    const today = todayStr();
+    if (state.lastCompletedDate === today) {
+      // already logged today — still record the extra session but don't double the streak
+      state.totalSessions += 1;
+      state.sessionLog.push({ date: today, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), type });
+      saveState();
+      renderDashboard();
+      showToast("Today's session already counted — logged as a bonus rep!", 'ok');
+      return;
+    }
+
+    if (state.lastCompletedDate && daysBetween(state.lastCompletedDate, today) === 1) {
+      state.streak += 1;
+    } else {
+      state.streak = 1;
+    }
+    state.lastCompletedDate = today;
+    state.totalSessions += 1;
+    state.sessionLog.push({ date: today, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), type });
+    saveState();
+    renderDashboard();
+    showToast(`Day ${state.streak} logged. Streak building!`, 'ok');
+  }
+
+  document.getElementById('quickCompleteBtn').addEventListener('click', () => completeSession('quick'));
+
+  /* ============================= GUIDED SESSION ============================= */
+  const sessionStage = document.getElementById('sessionStage');
+  const phaseLabel = document.getElementById('phaseLabel');
+  const phaseHint = document.getElementById('phaseHint');
+  const promptText = document.getElementById('promptText');
+  const elapsedText = document.getElementById('elapsedText');
+  const progressBar = document.getElementById('progressBar');
+  const breatheVisual = document.getElementById('breatheVisual');
+  const breatheText = document.getElementById('breatheText');
+  const foodVisual = document.getElementById('foodVisual');
+  const sessionFoodImg = document.getElementById('sessionFoodImg');
+  const sessionFoodEmoji = document.getElementById('sessionFoodEmoji');
+  const repulsionOverlay = document.getElementById('repulsionOverlay');
+  const waterVisual = document.getElementById('waterVisual');
+  const ttsToggle = document.getElementById('ttsToggle');
+
+  const startSessionBtn = document.getElementById('startSessionBtn');
+  const pauseSessionBtn = document.getElementById('pauseSessionBtn');
+  const resumeSessionBtn = document.getElementById('resumeSessionBtn');
+  const resetSessionBtn = document.getElementById('resetSessionBtn');
+
+  const TOTAL_SECONDS = 300;
+
+  function buildScript() {
+    const FOOD = foodLabel();
+    return [
+      { start: 0, phase: 1, text: `Settle into a comfortable position. Close your eyes if you can, or soften your gaze. Take a slow breath in through your nose...`, speak: `Settle into a comfortable position. Take a slow breath in through your nose.` },
+      { start: 15, phase: 1, text: `...and release it slowly through your mouth. With every breath, your body relaxes a little more deeply.`, speak: `And release it slowly through your mouth. With every breath, your body relaxes more deeply.` },
+      { start: 35, phase: 1, text: `You are calm, focused, and in control. You are ready to rewire your response to ${FOOD}.`, speak: `You are calm, focused, and in control. You are ready to rewire your response to ${FOOD}.` },
+
+      { start: 60, phase: 2, text: `Now picture ${FOOD} clearly in your mind — its exact color, its shape, its texture.`, speak: `Now picture ${FOOD} clearly in your mind. Its color, its shape, its texture.` },
+      { start: 85, phase: 2, text: `Notice every sharp detail. The image becomes vivid and high-contrast, impossible to ignore.`, speak: `Notice every sharp detail. The image becomes vivid and impossible to ignore.` },
+      { start: 110, phase: 2, text: `Hold this image steady. Your mind is fully focused on ${FOOD}, sharpening every sensory detail.`, speak: `Hold this image steady. Your mind is fully focused on ${FOOD}.` },
+      { start: 130, phase: 2, text: `This is the image your unconscious mind will now begin to transform.`, speak: `This is the image your unconscious mind will now begin to transform.` },
+
+      { start: 150, phase: 3, text: `Watch closely as ${FOOD} begins to change. The surface turns dull, greasy, and stale.`, speak: `Watch closely as ${FOOD} begins to change. The surface turns dull, greasy, and stale.` },
+      { start: 170, phase: 3, text: `A sour, chemical smell rises from it — the smell of rot, of something your body knows to reject.`, speak: `A sour, chemical smell rises from it, the smell of rot, something your body knows to reject.` },
+      { start: 190, phase: 3, text: `Imagine the toxins inside it clouding your energy, your skin, your focus. Your stomach tightens in warning.`, speak: `Imagine the toxins inside it clouding your energy and your focus. Your stomach tightens in warning.` },
+      { start: 210, phase: 3, text: `${FOOD} is spoiled, foul, and wrong for your body. Every cell in you wants to turn away from it.`, speak: `${FOOD} is spoiled and wrong for your body. Every cell in you wants to turn away from it.` },
+      { start: 225, phase: 3, text: `Feel the genuine disgust. This feeling is your protection — trust it.`, speak: `Feel the genuine disgust. This feeling is your protection. Trust it.` },
+
+      { start: 240, phase: 4, text: `Gently press two fingers to your throat. As you do, silently say "No." This is your anchor.`, speak: `Gently press two fingers to your throat. As you do, silently say no. This is your anchor.` },
+      { start: 255, phase: 4, text: `From now on, whenever you see ${FOOD}, this same throat-tightening signal will appear automatically — sharp, immediate, protective.`, speak: `From now on, whenever you see ${FOOD}, this same signal will appear automatically, sharp and protective.` },
+      { start: 270, phase: 4, text: `Now release. Picture a glass of clear, cool water washing the image away completely.`, speak: `Now release. Picture a glass of clear, cool water washing the image away completely.` },
+      { start: 285, phase: 4, text: `You feel refreshed, clean, and in control. This new response is now installed.`, speak: `You feel refreshed, clean, and in control. This new response is now installed.` },
+      { start: 297, phase: 4, text: `Session complete. Open your eyes when you're ready.`, speak: `Session complete. Open your eyes when you're ready.` }
+    ];
+  }
+
+  let script = buildScript();
+  let sessionTimer = null;
+  let elapsed = 0;
+  let lastBeatIndex = -1;
+  let sessionState = 'idle'; // idle | running | paused | done
+
+  function setPhaseVisual(phase) {
+    sessionStage.classList.remove('phase-bg-1', 'phase-bg-2', 'phase-bg-3', 'phase-bg-4', 'phase-bg-idle');
+    breatheVisual.classList.add('hidden'); breatheVisual.classList.remove('flex');
+    foodVisual.classList.add('hidden'); foodVisual.classList.remove('flex');
+    waterVisual.classList.add('hidden'); waterVisual.classList.remove('flex');
+    repulsionOverlay.classList.add('hidden');
+    sessionFoodImg.classList.remove('food-img-fresh', 'food-img-sensory', 'food-img-repulsion');
+
+    if (phase === 1) {
+      sessionStage.classList.add('phase-bg-1');
+      phaseLabel.textContent = 'Phase 1 · Induction';
+      phaseHint.textContent = 'Phase 1 · Induction';
+      breatheVisual.classList.remove('hidden'); breatheVisual.classList.add('flex');
+    } else if (phase === 2) {
+      sessionStage.classList.add('phase-bg-2');
+      phaseLabel.textContent = 'Phase 2 · Visualization';
+      phaseHint.textContent = 'Phase 2 · Sensory Amplification';
+      foodVisual.classList.remove('hidden'); foodVisual.classList.add('flex');
+      if (!sessionFoodImg.classList.contains('hidden')) sessionFoodImg.classList.add('food-img-sensory');
+    } else if (phase === 3) {
+      sessionStage.classList.add('phase-bg-3');
+      phaseLabel.textContent = 'Phase 3 · Repulsion';
+      phaseHint.textContent = 'Phase 3 · Repulsion Superimposition';
+      foodVisual.classList.remove('hidden'); foodVisual.classList.add('flex');
+      repulsionOverlay.classList.remove('hidden');
+      if (!sessionFoodImg.classList.contains('hidden')) sessionFoodImg.classList.add('food-img-repulsion');
+    } else if (phase === 4) {
+      sessionStage.classList.add('phase-bg-4');
+      phaseLabel.textContent = 'Phase 4 · Anchor & Refresh';
+      phaseHint.textContent = 'Phase 4 · Anchor Installation';
+      waterVisual.classList.remove('hidden'); waterVisual.classList.add('flex');
+    }
+  }
+
+  function speak(text) {
+    if (!state.ttsEnabled || !('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.92;
+      u.pitch = 1;
+      u.volume = 1;
+      window.speechSynthesis.speak(u);
+    } catch (e) { /* speech synthesis unavailable */ }
+  }
+
+  let breatheDir = true;
+  let breatheInterval = null;
+  function startBreatheCycle() {
+    stopBreatheCycle();
+    breatheDir = true;
+    breatheText.textContent = 'IN';
+    breatheInterval = setInterval(() => {
+      breatheDir = !breatheDir;
+      breatheText.textContent = breatheDir ? 'IN' : 'OUT';
+    }, 4000);
+  }
+  function stopBreatheCycle() {
+    if (breatheInterval) clearInterval(breatheInterval);
+    breatheInterval = null;
+  }
+
+  function tick() {
+    elapsed += 1;
+    if (elapsed >= TOTAL_SECONDS) {
+      elapsed = TOTAL_SECONDS;
+      updateSessionUI();
+      finishSession();
+      return;
+    }
+    updateSessionUI();
+  }
+
+  function updateSessionUI() {
+    const mm = Math.floor(elapsed / 60);
+    const ss = elapsed % 60;
+    elapsedText.textContent = `${mm}:${pad(ss)}`;
+    progressBar.style.width = `${(elapsed / TOTAL_SECONDS) * 100}%`;
+
+    let beatIndex = -1;
+    for (let i = 0; i < script.length; i++) {
+      if (script[i].start <= elapsed) beatIndex = i;
+    }
+    if (beatIndex !== -1 && beatIndex !== lastBeatIndex) {
+      lastBeatIndex = beatIndex;
+      const beat = script[beatIndex];
+      promptText.textContent = beat.text;
+      promptText.classList.remove('animate-fadeUp');
+      void promptText.offsetWidth;
+      promptText.classList.add('animate-fadeUp');
+      setPhaseVisual(beat.phase);
+      if (beat.phase === 1) startBreatheCycle(); else stopBreatheCycle();
+      speak(beat.speak || beat.text);
+    }
+  }
+
+  function startSession() {
+    script = buildScript();
+    elapsed = 0;
+    lastBeatIndex = -1;
+    sessionState = 'running';
+    updateSessionUI();
+    sessionTimer = setInterval(tick, 1000);
+    startSessionBtn.classList.add('hidden');
+    pauseSessionBtn.classList.remove('hidden');
+    resumeSessionBtn.classList.add('hidden');
+    resetSessionBtn.classList.remove('hidden');
+  }
+
+  function pauseSession() {
+    if (sessionState !== 'running') return;
+    sessionState = 'paused';
+    clearInterval(sessionTimer);
+    stopBreatheCycle();
+    if ('speechSynthesis' in window) window.speechSynthesis.pause();
+    pauseSessionBtn.classList.add('hidden');
+    resumeSessionBtn.classList.remove('hidden');
+  }
+
+  function resumeSession() {
+    if (sessionState !== 'paused') return;
+    sessionState = 'running';
+    sessionTimer = setInterval(tick, 1000);
+    const currentBeat = script[lastBeatIndex];
+    if (currentBeat && currentBeat.phase === 1) startBreatheCycle();
+    if ('speechSynthesis' in window) window.speechSynthesis.resume();
+    resumeSessionBtn.classList.add('hidden');
+    pauseSessionBtn.classList.remove('hidden');
+  }
+
+  function resetSession(silent) {
+    clearInterval(sessionTimer);
+    stopBreatheCycle();
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    sessionState = 'idle';
+    elapsed = 0;
+    lastBeatIndex = -1;
+    setPhaseVisual(0);
+    sessionStage.classList.add('phase-bg-idle');
+    phaseLabel.textContent = 'Ready';
+    phaseHint.textContent = 'Phase 1 · Induction';
+    elapsedText.textContent = '0:00';
+    progressBar.style.width = '0%';
+    promptText.textContent = `Press Start Session when you're ready for your 5-minute conditioning session.`;
+    startSessionBtn.classList.remove('hidden');
+    pauseSessionBtn.classList.add('hidden');
+    resumeSessionBtn.classList.add('hidden');
+    resetSessionBtn.classList.add('hidden');
+    if (!silent) showToast('Session reset.', 'warn');
+  }
+
+  function finishSession() {
+    clearInterval(sessionTimer);
+    stopBreatheCycle();
+    sessionState = 'done';
+    promptText.textContent = `Session complete. Open your eyes when you're ready — great work reinforcing your new response to ${foodLabel()}.`;
+    pauseSessionBtn.classList.add('hidden');
+    resumeSessionBtn.classList.add('hidden');
+    completeSession('guided');
+    setTimeout(() => resetSession(true), 4000);
+  }
+
+  startSessionBtn.addEventListener('click', startSession);
+  pauseSessionBtn.addEventListener('click', pauseSession);
+  resumeSessionBtn.addEventListener('click', resumeSession);
+  resetSessionBtn.addEventListener('click', () => resetSession(false));
+
+  ttsToggle.addEventListener('change', () => {
+    state.ttsEnabled = ttsToggle.checked;
+    saveState();
+    if (!state.ttsEnabled && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+
+  /* ============================= NOTIFICATIONS ============================= */
+  const notifStatusBadge = document.getElementById('notifStatusBadge');
+  const requestNotifBtn = document.getElementById('requestNotifBtn');
+  const reminderList = document.getElementById('reminderList');
+  const reminderTimeInput = document.getElementById('reminderTimeInput');
+  const addReminderBtn = document.getElementById('addReminderBtn');
+  const reminderLimitText = document.getElementById('reminderLimitText');
+
+  function notifSupported() {
+    return 'Notification' in window;
+  }
+
+  function renderNotifStatus() {
+    if (!notifSupported()) {
+      notifStatusBadge.textContent = 'Not supported';
+      notifStatusBadge.className = 'text-xs font-semibold px-3 py-1.5 rounded-full bg-surface-700 border border-surface-500 text-slate-400';
+      requestNotifBtn.disabled = true;
+      requestNotifBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      return;
+    }
+    const perm = Notification.permission;
+    if (perm === 'granted') {
+      notifStatusBadge.textContent = '✓ Enabled';
+      notifStatusBadge.className = 'text-xs font-semibold px-3 py-1.5 rounded-full bg-fresh-700 border border-fresh-500 text-fresh-100';
+      requestNotifBtn.textContent = 'Enabled';
+      requestNotifBtn.disabled = true;
+      requestNotifBtn.classList.add('opacity-60', 'cursor-not-allowed');
+    } else if (perm === 'denied') {
+      notifStatusBadge.textContent = '✕ Blocked';
+      notifStatusBadge.className = 'text-xs font-semibold px-3 py-1.5 rounded-full bg-aversion-700 border border-aversion-500 text-white';
+      requestNotifBtn.textContent = 'Blocked in browser settings';
+      requestNotifBtn.disabled = true;
+      requestNotifBtn.classList.add('opacity-60', 'cursor-not-allowed');
+    } else {
+      notifStatusBadge.textContent = 'Not enabled';
+      notifStatusBadge.className = 'text-xs font-semibold px-3 py-1.5 rounded-full bg-surface-700 border border-surface-500 text-slate-300';
+      requestNotifBtn.textContent = 'Enable Alerts';
+      requestNotifBtn.disabled = false;
+      requestNotifBtn.classList.remove('opacity-60', 'opacity-50', 'cursor-not-allowed');
+    }
+  }
+
+  requestNotifBtn.addEventListener('click', () => {
+    if (!notifSupported()) return;
+    Notification.requestPermission().then(() => {
+      renderNotifStatus();
+      if (Notification.permission === 'granted') {
+        showToast('Notifications enabled.', 'ok');
+        new Notification('ReWire Alerts Enabled', { body: `You'll be reminded to reinforce your response to ${foodLabel() || 'your target food'}.` });
+      }
+    });
+  });
+
+  function renderReminders() {
+    if (state.reminders.length === 0) {
+      reminderList.innerHTML = `<li class="text-sm text-slate-500 italic">No reminders set yet.</li>`;
+    } else {
+      reminderList.innerHTML = state.reminders.map(r => `
+        <li class="flex items-center justify-between bg-surface-700/60 rounded-lg px-3 py-2.5">
+          <div class="flex items-center gap-3">
+            <input type="checkbox" data-id="${r.id}" class="reminder-toggle switch" ${r.enabled ? 'checked' : ''} />
+            <span class="text-sm font-semibold text-white">${formatTime12(r.time)}</span>
+          </div>
+          <button data-id="${r.id}" class="reminder-remove text-slate-500 hover:text-aversion-400 text-sm">Remove</button>
+        </li>
+      `).join('');
+      reminderList.querySelectorAll('.reminder-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.reminders = state.reminders.filter(r => r.id !== btn.dataset.id);
+          saveState();
+          renderReminders();
+        });
+      });
+      reminderList.querySelectorAll('.reminder-toggle').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const r = state.reminders.find(r => r.id === cb.dataset.id);
+          if (r) { r.enabled = cb.checked; saveState(); }
+        });
+      });
+    }
+    reminderLimitText.classList.toggle('hidden', state.reminders.length < 3);
+    reminderAddRow.classList.toggle('hidden', state.reminders.length >= 3);
+  }
+
+  function formatTime12(hhmm) {
+    const [h, m] = hhmm.split(':').map(Number);
+    const period = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 === 0 ? 12 : h % 12;
+    return `${h12}:${pad(m)} ${period}`;
+  }
+
+  addReminderBtn.addEventListener('click', () => {
+    if (state.reminders.length >= 3) return;
+    const time = reminderTimeInput.value;
+    if (!time) { showToast('Choose a time first.', 'error'); return; }
+    if (state.reminders.some(r => r.time === time)) { showToast('That time is already scheduled.', 'error'); return; }
+    state.reminders.push({ id: uid(), time, enabled: true });
+    state.reminders.sort((a, b) => a.time.localeCompare(b.time));
+    saveState();
+    renderReminders();
+    showToast('Reminder added.', 'ok');
+  });
+
+  const AVERSION_MESSAGES = () => ([
+    `Remember: ${foodLabel() || 'that trigger food'} is not fuel — it's a setback in disguise.`,
+    `Picture ${foodLabel() || 'the trigger food'} exactly as you conditioned yourself to see it: dull, greasy, wrong.`,
+    `Your throat-tightening anchor is active. Trust the signal.`,
+    `Choose the version of you that walks past ${foodLabel() || 'the trigger food'} without a second glance.`
+  ]);
+
+  function checkReminders() {
+    const nowHHMM = currentHHMM();
+    const today = todayStr();
+    state.reminders.forEach(r => {
+      if (!r.enabled) return;
+      if (r.time !== nowHHMM) return;
+      const key = `${today}T${r.time}`;
+      if (state.lastFired[r.id] === key) return;
+      state.lastFired[r.id] = key;
+      saveState();
+      fireReminderAlert(r.time);
+    });
+  }
+
+  function fireReminderAlert(time) {
+    const messages = AVERSION_MESSAGES();
+    const body = messages[Math.floor(Math.random() * messages.length)];
+    if (notifSupported() && Notification.permission === 'granted') {
+      try {
+        new Notification(`⏰ Conditioning Reminder — ${formatTime12(time)}`, { body, tag: 'rewire-reminder' });
+      } catch (e) { /* ignore */ }
+    }
+    showToast(`Reminder: ${body}`, 'warn');
+    speak(body);
+  }
+
+  setInterval(checkReminders, 15000);
+
+  /* ============================= PRE-MEAL FLASH ALERT ============================= */
+  const flashAlertBtn = document.getElementById('flashAlertBtn');
+  const flashOverlay = document.getElementById('flashOverlay');
+  const flashMessage = document.getElementById('flashMessage');
+  const flashProgress = document.getElementById('flashProgress');
+  const flashCountdown = document.getElementById('flashCountdown');
+  const flashCloseBtn = document.getElementById('flashCloseBtn');
+
+  const FLASH_MESSAGES = () => ([
+    `${foodLabel() || 'That trigger food'} = dull. Greasy. Stale.`,
+    `Your body rejects ${foodLabel() || 'that trigger food'}.`,
+    `Feel the throat-tightening anchor now.`,
+    `Choose clean. Choose clear. Choose strong.`,
+    `${foodLabel() || 'That trigger food'} is not worth it.`
+  ]);
+
+  let flashInterval = null;
+  let flashMsgInterval = null;
+  let flashBgToggle = false;
+  let flashRunning = false;
+
+  function triggerFlashAlert() {
+    if (flashRunning) return;
+    flashRunning = true;
+    let secondsLeft = 30;
+    const messages = FLASH_MESSAGES();
+    let msgIndex = 0;
+
+    flashOverlay.classList.remove('hidden');
+    flashOverlay.classList.add('flex');
+    flashMessage.textContent = messages[0];
+    flashProgress.style.width = '100%';
+    flashCountdown.textContent = `${secondsLeft}s`;
+
+    if (notifSupported() && Notification.permission === 'granted') {
+      try {
+        new Notification('⚡ Pre-Meal Aversion Flash', { body: messages[0], tag: 'rewire-flash' });
+      } catch (e) { /* ignore */ }
+    }
+    speak(messages[0]);
+
+    flashBgToggle = false;
+    flashInterval = setInterval(() => {
+      flashBgToggle = !flashBgToggle;
+      flashOverlay.style.background = flashBgToggle ? '#3b0764' : '#4c0519';
+      secondsLeft -= 1;
+      flashCountdown.textContent = `${Math.max(secondsLeft, 0)}s`;
+      flashProgress.style.width = `${Math.max((secondsLeft / 30) * 100, 0)}%`;
+      if (secondsLeft <= 0) stopFlashAlert(true);
+    }, 500);
+
+    flashMsgInterval = setInterval(() => {
+      msgIndex = (msgIndex + 1) % messages.length;
+      flashMessage.textContent = messages[msgIndex];
+      speak(messages[msgIndex]);
+    }, 5000);
+  }
+
+  function stopFlashAlert(completed) {
+    clearInterval(flashInterval);
+    clearInterval(flashMsgInterval);
+    flashInterval = null;
+    flashMsgInterval = null;
+    flashRunning = false;
+    flashOverlay.classList.add('hidden');
+    flashOverlay.classList.remove('flex');
+    if (completed) showToast('Anchor reset complete.', 'ok');
+  }
+
+  flashAlertBtn.addEventListener('click', triggerFlashAlert);
+  flashCloseBtn.addEventListener('click', () => stopFlashAlert(false));
+
+  /* ============================= INIT ============================= */
+  function init() {
+    renderFoodPreview();
+    renderDashboard();
+    renderNotifStatus();
+    renderReminders();
+    ttsToggle.checked = !!state.ttsEnabled;
+    setPhaseVisual(0);
+    sessionStage.classList.add('phase-bg-idle');
+
+    if (!notifSupported()) {
+      showToast('Push notifications are not supported in this browser.', 'warn');
+    }
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
